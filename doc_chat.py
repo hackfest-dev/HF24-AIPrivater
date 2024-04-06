@@ -27,15 +27,7 @@ class document_chatting():
 
 
 
-    # def to_markdown(self,text):
-    #     text = text.replace('•', '  *')
-    #     txt_content=Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
-    #     return markdown2.markdown(txt_content)
-    
-    # def write_to_file(content, file_path):
-    #     file_path="image_text.txt"
-    #     with open(file_path, 'w') as file:
-    #         file.write(content)
+   
 
     def type_checker(self):
         # Get the file extension
@@ -48,25 +40,7 @@ class document_chatting():
         else:
             print("File Type not supported!")  # Unknown file type
     
-    # def pdf_reader(self):
-    #     # Open the PDF file
-    #     pdf_document = fitz.open(self.doc_path)
-    #     text=[]
-    #     for page_num in range(len(pdf_document)):
-    #         # Get the page
-    #         page = pdf_document.load_page(page_num)
-    #         # Convert the page to an image
-    #         pix = page.get_pixmap()
-    #         pix.pil_save("output/{page_num}.png")
-    #         # img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-    #         img=Image.open("output/{page_num}.png")
-    #         response = self.model.generate_content(["Extract all the text from the image and display it ", img], stream=True)
-    #         text.append(response.resolve())
-    #     dire_delete="output"
-    #     shutil.rmtree(dire_delete)
-    #     with open(self.outputPath, 'w') as file:
-            
-    #         file.write(text + '\n')
+   
     def pdf_reader(self):
         # Open the PDF file
         pdf_document = fitz.open(self.doc_path)
@@ -80,30 +54,19 @@ class document_chatting():
             page = pdf_document.load_page(page_num)
             # Convert the page to an image
             pix = page.get_pixmap()
-            image_path = f"output/{page_num}.png"
+            image_path = f"output/{page_num}i.png"
             pix.pil_save(image_path)
-            # # Open the image
-            # img = Image.open(image_path)
-            # # Generate content from the image
-            # response = self.model.generate_content(["Extract all the text from the image and display it ", img], stream=True)
-            # text.append(response.resolve())
-            # # Delete the image file
+            
         for path_suffix in range(len(pdf_document)):
-                image_path=f'output/{path_suffix}.png'
-                img=PIL.Image.open(image_path)
+                image_path=f'output/{path_suffix}i.png'
+                image=Image.open(image_path)
                 # Generate content from the image
-                response = self.model.generate_content(["Extract all the text from the image and display it ", img], stream=True)
-                text.append(response.resolve())
-        os.remove(image_path)
-        
-        # Delete the output directory
-        shutil.rmtree(output_directory)
-        
-        # Write the extracted text to the output file
-        with open(self.outputPath, 'w') as file:
-            file.write('\n'.join(text))
-
-
+                response = self.model.generate_content(["Extract all the text from the image and display it ", image], stream=True)
+                response.resolve()
+                text.append(response.text)
+       
+        # print(text)
+        return text
 
     def img_reader(self):
         img=PIL.Image.open(self.doc_path)
@@ -116,7 +79,7 @@ class document_chatting():
 
     def insight_generation(self):
         context=self.type_checker()
-        question='Generate medical insights for the following report.'
+        question='Is this  report healthy?'
         formatted_prompt = f"Question: {question}\n\nContext: {context}"
         stream=ollama.chat(
                 model='mistral',
@@ -127,4 +90,4 @@ class document_chatting():
             print(chunk['message']['content'], end='', flush=True)
 
 parsed=document_chatting(doc_path="hackfest/WM17S.pdf")
-display(parsed.insight_generation())
+display(parsed.type_checker())
