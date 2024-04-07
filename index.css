@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+ section  { @apply py-[75px];
+}
+}
+
+@layer components{
+  .container {
+    @apply mx-auto px-5 max-w-full w-[1440px];
+  }
+  .btn {
+    @apply bg-priC py-[15px] px-[35px] rounded-[50px] text-white font-[600] mt-[38px];
+  }
+  .heading{
+    @apply text-[44px] leading-[54px] font-[700] text-head;
+  }
+  .text_para{
+    @apply text-[18px] leading-[30px] font-[400] text-textC mt-[18px];
+  
+}
+ .header{
+  @apply bg-[url('./assets/images/mask.png')] bg-no-repeat bg-center bg-cover w-full h-[100px] leading-[100px]
+ }
+ .hero_section{
+  @apply bg-[url('./assets/images/winter.avif')] bg-no-repeat bg-center bg-cover;
+
+ }
+
+}
+
+@media only screen and (max-width:768px){
+    .heading{
+        @apply text-[25px] leading-[36px];
+    }
+    .text_para{
+        @apply text-[16px] leading-7 mt-3 lg:leading-[15px];
+    }
+}
